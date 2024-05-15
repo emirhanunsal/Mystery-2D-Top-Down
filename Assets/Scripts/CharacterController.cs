@@ -135,7 +135,7 @@ public class CharacterMovement : MonoBehaviour
         arrow.transform.position = rb.position;
 
         timer = Time.time - startTime; // Calculate time since shooting started
-
+        
         // Arrow speed calculation based on elapsed time
         if (timer > 1)
         {
@@ -145,7 +145,7 @@ public class CharacterMovement : MonoBehaviour
         }
         else if (timer < 0.3)
         {
-            arrowSpeed = maxArrowSpeed * 0.5f;
+            arrowSpeed = maxArrowSpeed * 0.25f;
             bowAnimator.SetBool("isMax", false);
 
         }

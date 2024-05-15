@@ -273,6 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  arrowSR: {fileID: 4968443776695940812}
   cam: {fileID: 519420031}
   bow: {fileID: 606716153}
   arrow: {fileID: 4968443776695940808}
@@ -675,6 +676,11 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!212 &4968443776695940812 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7904755658418245777, guid: 0f12b8c5d0992504db6c1f7384e6f707, type: 3}
+  m_PrefabInstance: {fileID: 736931500718588766}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
