@@ -278,7 +278,7 @@ MonoBehaviour:
   arrow: {fileID: 4968443776695940808}
   arrowRb: {fileID: 4968443776695940810}
   arrowSpeed: 5
-  timePassed: 0
+  maxArrowSpeed: 40
   bowAnimator: {fileID: 606716157}
 --- !u!61 &253534478
 BoxCollider2D:

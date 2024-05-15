@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
@@ -6,15 +7,19 @@ public class CharacterMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+    [SerializeField] private SpriteRenderer arrowSR;
     [SerializeField] private Camera cam;
     private Vector2 mousePos;
     
     
-    public GameObject bow;
-    public GameObject arrow;
-    public Rigidbody2D arrowRb;
+    [SerializeField] private GameObject bow;
+    [SerializeField] private GameObject arrow;
+    [SerializeField] private Rigidbody2D arrowRb;
     public float arrowSpeed;
-    public float timePassed;
+    private float timer;
+    private float startTime;
+    [SerializeField] private float maxArrowSpeed;
+    private bool isTimerStarted;
     
     
     bool isShooting = false;
@@ -37,7 +42,15 @@ public class CharacterMovement : MonoBehaviour
 
         if (isShooting)
         {
+            if (!isTimerStarted)
+            {
+                startTime = Time.time;
+                isTimerStarted = true;
+            }
+            
+            
             FireArrow();
+
         }
     }
 
@@ -79,13 +92,16 @@ public class CharacterMovement : MonoBehaviour
     {
         bowAnimator.SetBool("isShooting", isShooting);
         
-        
+        arrowSR.enabled = false;
+
         if (Input.GetKey(KeyCode.Mouse1))
         {
             
             isShooting = true;
-            bow.GetComponent<SpriteRenderer>().enabled = true;
             bowAnimator.SetBool("isShooting", isShooting);
+            bow.GetComponent<SpriteRenderer>().enabled = true;
+            arrowSR.enabled = false;
+
 
         }
 
@@ -94,7 +110,9 @@ public class CharacterMovement : MonoBehaviour
             isShooting = false;
             bow.GetComponent<SpriteRenderer>().enabled = false;
             bowAnimator.SetBool("isShooting", isShooting);
-
+            isTimerStarted = false;
+            bowAnimator.SetBool("isMax", false);
+            arrowSR.enabled = true;
         }
         
         
@@ -105,18 +123,45 @@ public class CharacterMovement : MonoBehaviour
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         bow.transform.rotation = Quaternion.Euler(0f,0f,180 + angle);
         bow.transform.position = rb.position;
+        
     }
 
     void FireArrow()
     {
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-
         Vector2 lookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        arrow.transform.rotation = Quaternion.Euler(0f,0f,180 + angle);
+        arrow.transform.rotation = Quaternion.Euler(0f, 0f, 180 + angle);
         arrow.transform.position = rb.position;
+
+        timer = Time.time - startTime; // Calculate time since shooting started
+
+        // Arrow speed calculation based on elapsed time
+        if (timer > 1)
+        {
+            arrowSpeed = maxArrowSpeed;
+            bowAnimator.SetBool("isMax", true);
+
+        }
+        else if (timer < 0.3)
+        {
+            arrowSpeed = maxArrowSpeed * 0.5f;
+            bowAnimator.SetBool("isMax", false);
+
+        }
+        else
+        {
+            arrowSpeed = maxArrowSpeed * timer;
+            bowAnimator.SetBool("isMax", false);
+
+        }
         
-        arrowRb.velocity = lookDir * arrowSpeed;
-        
+        Debug.Log(timer);
+        arrowRb.velocity = lookDir.normalized * arrowSpeed; // Set arrow velocity
+        arrowSR.enabled = false; // Ok görünmez olacak
+        // Reset the start time for the next shot
+
     }
+
+
 }
