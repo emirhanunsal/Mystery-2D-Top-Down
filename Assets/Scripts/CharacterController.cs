@@ -24,8 +24,12 @@ public class CharacterMovement : MonoBehaviour
     
     bool isShooting = false;
     [SerializeField] private Animator bowAnimator;
-    
 
+    [SerializeField] private float dashForce;
+    [SerializeField] float dashCooldown;
+    private float dashTimeStarter;
+
+    
 
     void Start()
     {
@@ -39,7 +43,9 @@ public class CharacterMovement : MonoBehaviour
         
         Move();
         Bow();
+        Dash();
 
+        
         if (isShooting)
         {
             if (!isTimerStarted)
@@ -61,17 +67,6 @@ public class CharacterMovement : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
 
-       
-
-        if (moveX == 1)
-        {
-            sr.flipX = true;
-        }
-        else if (moveX == -1)
-        {
-            sr.flipX = false;
-        }
-        
         
         Vector2 movement = new Vector2(moveX, moveY).normalized;
         rb.velocity = movement * moveSpeed;
@@ -120,6 +115,14 @@ public class CharacterMovement : MonoBehaviour
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
         Vector2 lookDir = mousePos - rb.position;
+        if (mousePos.x > rb.position.x)
+        {
+            sr.flipX = true;
+        }
+        else
+        {
+            sr.flipX = false;
+        }
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         bow.transform.rotation = Quaternion.Euler(0f,0f,180 + angle);
         bow.transform.position = rb.position;
@@ -161,6 +164,20 @@ public class CharacterMovement : MonoBehaviour
         arrowSR.enabled = false; // Ok görünmez olacak
         // Reset the start time for the next shot
 
+    }
+
+    void Dash()
+    {
+        if (Input.GetButtonDown("Dash") && (Time.time - dashTimeStarter) >= dashCooldown)
+        {
+            dashTimeStarter = Time.time;
+            Debug.Log("Dash button pressed");
+            float moveX = Input.GetAxisRaw("Horizontal");
+            float moveY = Input.GetAxisRaw("Vertical");
+        
+            Vector2 movement = new Vector2(moveX, moveY).normalized;
+            rb.AddForce(movement * dashForce, ForceMode2D.Impulse);
+        }
     }
 
 

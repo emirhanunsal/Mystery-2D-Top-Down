@@ -259,7 +259,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &253534477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,6 +281,8 @@ MonoBehaviour:
   arrowSpeed: 5
   maxArrowSpeed: 40
   bowAnimator: {fileID: 606716157}
+  dashForce: 10
+  dashCooldown: 2
 --- !u!61 &253534478
 BoxCollider2D:
   m_ObjectHideFlags: 0
